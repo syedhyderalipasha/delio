@@ -4,8 +4,8 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - uses: snyk/actions/setup@master
+      - uses: actions/checkout@v2
+      - uses: snyk/actions/iac@master
       - name: Snyk monitor
         continue-on-error: true
         run: snyk test
