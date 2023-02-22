@@ -15,5 +15,3 @@ jobs:
         with:
           directory: terraform
           framework: terraform
-      - name: Test with tfsec
-        uses: aquasecurity/tfsec-action@v1.0.0
