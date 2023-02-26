@@ -1,17 +1,23 @@
-name: security-checks
+name: Checkov Scan
 on: pull_request
 jobs:
   security-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
-      - name: Test with Checkov
-        id: checkov
-        uses: bridgecrewio/checkov-action@master
-        with:
+    - uses: actions/checkout@v2
+      with:
           directory: terraform
           framework: terraform
+    - name: Install Checkov
+      run: |
+        curl -LJO https://github.com/bridgecrewio/checkov/releases/latest/download/checkov-linux-arm64
+        sudo mv checkov-linux-arm64 /usr/local/bin/checkov
+        sudo chmod +x /usr/local/bin/checkov
+    - name: Run Checkov
+      run: |
+        checkov -d . > checkov_output.txt
+    - name: Upload Checkov Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: Checkov Report
+        path: checkov_output.txtname: security-checks
