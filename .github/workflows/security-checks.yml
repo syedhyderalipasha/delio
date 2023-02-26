@@ -15,7 +15,7 @@ jobs:
         sudo chmod +x /usr/local/bin/checkov
     - name: Run Checkov
       run: |
-        checkov -d . > checkov_output.txt
+        checkov -d /terraform > checkov_output.txt
     - name: Upload Checkov Report
       uses: actions/upload-artifact@v2
       with:
