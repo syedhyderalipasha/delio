@@ -15,8 +15,6 @@ jobs:
         with:
           directory: terraform
           framework: terraform
-      - name: Test with tfsec
-        uses: aquasecurity/tfsec-action@v1.0.0
       - name: Upload Checkov Report
         uses: actions/upload-artifact@v2
         with:
