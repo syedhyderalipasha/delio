@@ -15,8 +15,3 @@ jobs:
         with:
           directory: terraform
           framework: terraform
-      - name: Upload Checkov Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: Checkov Report
-          path: checkov_output.txt
