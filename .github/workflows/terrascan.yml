@@ -1,23 +1,17 @@
 name: terrascan
 on: pull_request
 jobs:
-  security-checks:
+  terrascan_job:
     runs-on: ubuntu-latest
+    name: terrascan-action
     steps:
-      - uses: actions/checkout@v2
-      - name: Install Terrascan
-        run: |
-          curl -L "$(curl -s https://api.github.com/repos/accurics/terrascan/releases/latest | jq -r '.assets[] | select(.name | contains("Linux_x86_64.tar.gz")) | .browser_download_url')" -o terrascan.tar.gz
-          tar zxvf terrascan.tar.gz
-          sudo mv terrascan /usr/local/bin/
-      - name: Test with Terrascan
-        id: terrascan
-        run: |
-          echo "Executing Terrascan command..."
-          terrascan scan -f ./terraform -o docx -o-file=terrascan-results.docx
-      - name: Upload Terrascan results artifact
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: terrascan-results
-          path: terrascan-results.docx
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Run Terrascan
+      id: terrascan
+      uses: tenable/terrascan-action@main
+      with:
+        iac_type: 'terraform'
+        iac_version: 'v14'
+        policy_type: 'aws'
+        only_warn: true
