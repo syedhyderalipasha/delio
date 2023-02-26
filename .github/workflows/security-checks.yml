@@ -5,24 +5,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
+      - name: Install Checkov
+        run: |
+          pip install checkov
       - name: Test with Checkov
         id: checkov
         run: |
           echo "Executing checkov command..."
-          checkov -d ./terraform --skip-check CKV_AWS_42
-      - name: Upload Checkov Results
+          checkov -d ./terraform --skip-check CKV_AWS_42 --output-name checkov-results
+      - name: Display results
+        if: always()
+        run: |
+          echo "Checkov results by severity:"
+          cat checkov-results | jq '.results | group_by(.metadata.severity) | map({severity: first().metadata.severity, count: length})'
+      - name: Upload results
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: checkov-results
-          path: output.txt
-      - name: Debug Checkov Results
-        if: always()
-        run: |
-          echo "Checking if output.txt exists..."
-          ls
-          cat output.txt
+          path: checkov-results
