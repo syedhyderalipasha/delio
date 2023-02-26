@@ -21,10 +21,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: checkov-results
-          path: checkov-results
+          name: checkov-results.xlsx
+          path: checkov-results.xlsx
       - name: Display Checkov results by severity
         if: always()
         run: |
           echo "Checkov results by severity:"
-          cat checkov-results | jq -r '.results | group_by(.check_id, .file_path) | map({severity: first().metadata.severity, check_id: first().check_id, file_path: first().file_path, count: length}) | group_by(.severity) | map({severity: first().severity, count: length, checks: [. | {check_id: .check_id, file_path: .file_path, count: .count}]})' | jq .
+          cat checkov-results.xlsx | jq -r '.results | group_by(.check_id, .file_path) | map({severity: first().metadata.severity, check_id: first().check_id, file_path: first().file_path, count: length}) | group_by(.severity) | map({severity: first().severity, count: length, checks: [. | {check_id: .check_id, file_path: .file_path, count: .count}]})' | jq .
