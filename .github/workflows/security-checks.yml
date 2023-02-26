@@ -16,7 +16,7 @@ jobs:
         id: checkov
         run: |
           echo "Executing checkov command..."
-          checkov -d ./terraform | tee checkov-results
+          checkov -d ./terraform | tee checkov-results.docx
       - name: Display Checkov results by severity
         run: |
           echo "Checkov results by severity:"
@@ -26,4 +26,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: checkov-results
-          path: checkov-results
+          path: checkov-results.docx
