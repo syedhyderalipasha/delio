@@ -12,7 +12,7 @@ jobs:
         id: checkov
         run: |
           echo "Executing checkov command..."
-          checkov -d ./terraform --skip-check CKV_AWS_42 --output-name checkov-results
+          checkov -d ./terraform
       - name: Display results
         if: always()
         run: |
