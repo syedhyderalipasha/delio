@@ -16,7 +16,7 @@ jobs:
         id: checkov
         run: |
           echo "Executing checkov command..."
-          checkov -d ./terraform
+          checkov -d ./terraform | tee checkov-results
       - name: Upload Checkov results artifact
         if: always()
         uses: actions/upload-artifact@v2
