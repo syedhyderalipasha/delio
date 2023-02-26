@@ -1,4 +1,4 @@
-name: security-checks
+name: terrascan
 on: pull_request
 jobs:
   security-checks:
