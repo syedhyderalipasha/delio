@@ -5,6 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
       - name: Install Checkov
         run: |
           pip install checkov
@@ -12,15 +16,15 @@ jobs:
         id: checkov
         run: |
           echo "Executing checkov command..."
-          checkov -d ./terraform
-      - name: Display results
-        if: always()
-        run: |
-          echo "Checkov results by severity:"
-          cat checkov-results | jq '.results | group_by(.metadata.severity) | map({severity: first().metadata.severity, count: length})'
-      - name: Upload results
+          checkov -d ./terraform | tee checkov-results
+      - name: Upload Checkov results artifact
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: checkov-results
           path: checkov-results
+      - name: Display Checkov results by severity
+        if: always()
+        run: |
+          echo "Checkov results by severity:"
+          cat checkov-results | jq -r '.results | group_by(.check_id, .file_path) | map({severity: first().metadata.severity, check_id: first().check_id, file_path: first().file_path, count: length}) | group_by(.severity) | map({severity: first().severity, count: length, checks: [. | {check_id: .check_id, file_path: .file_path, count: .count}]})' | jq .
