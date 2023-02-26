@@ -4,8 +4,8 @@ jobs:
   security-checks:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
       
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
@@ -16,12 +16,12 @@ jobs:
         id: checkov
         uses: bridgecrewio/checkov-action@master
         
-    - name: Run Checkov directory scan
-      run: |
-        checkov -d . -o json > checkov_output.json
+      - name: Run Checkov directory scan
+        run: |
+          checkov -d ./terraform -o json > checkov_output.json
         
-    - name: Upload Checkov output
-      uses: actions/upload-artifact@v2
-      with:
-        name: checkov_output
-        path: checkov_output.json
+      - name: Upload Checkov output
+        uses: actions/upload-artifact@v2
+        with:
+          name: checkov_output
+          path: checkov_output.json
