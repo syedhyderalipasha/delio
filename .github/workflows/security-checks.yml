@@ -12,6 +12,7 @@ jobs:
         sudo pip3 install checkov
     - name: Run Checkov
       run: |
+        terraform init ./terraform
         checkov -d ./terraform > checkov_output.txt
     - name: Upload Checkov Report
       uses: actions/upload-artifact@v2
