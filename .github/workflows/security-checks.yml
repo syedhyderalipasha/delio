@@ -16,14 +16,10 @@ jobs:
         id: checkov
         run: |
           echo "Executing checkov command..."
-          checkov -d ./terraform | tee checkov-results.csv
-      - name: Display Checkov results by severity
-        run: |
-          echo "Checkov results by severity:"
-          cat checkov-results | jq -r '.results | group_by(.metadata.severity) | map({severity: first().metadata.severity, count: length, checks: [. | {check_id: .check_id, file_path: .file_path}]}) | group_by(.severity) | map({severity: first().severity, count: length, checks: [.[].checks | add]})' | jq .
+          checkov -d ./terraform | tee checkov-results.json
       - name: Upload Checkov results artifact
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: checkov-results
-          path: checkov-results.csv
+          path: checkov-results.json
