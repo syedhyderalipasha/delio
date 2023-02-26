@@ -20,4 +20,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Checkov Report
-        path: checkov_output.txtname: security-checks
+        path: checkov_output.txt
