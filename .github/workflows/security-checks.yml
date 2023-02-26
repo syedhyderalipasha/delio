@@ -1,19 +1,26 @@
 name: Checkov Scan
 on: pull_request
 jobs:
-  checkov:
+  security-checks:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.1.0
+    - name: Initialize Terraform
+      run: terraform init ./terraform
+      working-directory: ${{ github.workspace }}
     - name: Install Checkov
       run: |
-        sudo apt-get update
-        sudo apt-get install -y python3-pip
-        sudo pip3 install checkov
+        curl -LJO https://github.com/bridgecrewio/checkov/releases/latest/download/checkov-linux-arm64
+        sudo mv checkov-linux-arm64 /usr/local/bin/checkov
+        sudo chmod +x /usr/local/bin/checkov
     - name: Run Checkov
       run: |
-        terraform init ./terraform
         checkov -d ./terraform > checkov_output.txt
+      working-directory: ${{ github.workspace }}
     - name: Upload Checkov Report
       uses: actions/upload-artifact@v2
       with:
