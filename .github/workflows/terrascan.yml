@@ -16,9 +16,8 @@ jobs:
         policy_type: 'aws'
         only_warn: true
         iac_dir: terraform
-    - name: Upload Checkov results artifact
-      if: always()
+    - name: Upload terrascan results
       uses: actions/upload-artifact@v2
       with:
-        name: checkov-results
-        path: checkov-results.docx
+        name: terrascan-results
+        path: results.txt
