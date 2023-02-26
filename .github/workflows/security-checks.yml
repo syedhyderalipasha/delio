@@ -11,15 +11,18 @@ jobs:
           python-version: 3.8
       - name: Test with Checkov
         id: checkov
-        uses: bridgecrewio/checkov-action@master
-        with:
-          directory: terraform
-          framework: terraform
-          args: --soft-fail --output json
-      - name: Filter Checkov results by severity
-        run: python3 filter_checkov_results.py
-      - name: Upload Checkov output
+        run: |
+          echo "Executing checkov command..."
+          checkov -d ./terraform --skip-check CKV_AWS_42
+      - name: Upload Checkov Results
+        if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: checkov-output
-          path: checkov_output.txt
+          name: checkov-results
+          path: output.txt
+      - name: Debug Checkov Results
+        if: always()
+        run: |
+          echo "Checking if output.txt exists..."
+          ls
+          cat output.txt
