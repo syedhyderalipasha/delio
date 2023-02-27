@@ -12,14 +12,13 @@ jobs:
       - name: Install Checkov
         run: |
           pip install checkov
-      - name: Test with Checkov
+      - name: Checkov Scan
         id: checkov
         run: |
-          echo "Executing checkov command..."
-          checkov -d ./terraform | tee checkov_report.md
-      - name: Upload Checkov results artifact
-        if: always()
+          checkov -d ./terraform --output-file checkov_report.md
+
+      - name: Upload report to artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: checkov-results
-          path: checkov-results.md
+          name: Checkov Report
+          path: checkov_report.md
