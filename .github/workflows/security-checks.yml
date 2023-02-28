@@ -22,7 +22,7 @@ jobs:
         with:
           name: Checkov Report
           path: checkov_report.md
-    terrascan:
+  terrascan:
     runs-on: ubuntu-latest
     name: terrascan-action
     steps:
