@@ -26,12 +26,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install Terrascan
-        run: |
-          curl -L "$(curl -s https://api.github.com/repos/accurics/terrascan/releases/latest | grep -o -E "https://.+?_Linux_x86_64.tar.gz")" > terrascan.tar.gz
-          tar zxvf terrascan.tar.gz
-          chmod +x terrascan
-          sudo mv terrascan /usr/local/bin/
+      - name: Run Terrascan
+      id: terrascan
+      uses: tenable/terrascan-action@main
+      with:
+        iac_type: 'terraform'
+        iac_version: 'v14'
+        policy_type: 'aws'
       - name: Terrascan Scan
         id: terrascan
         run: |
@@ -47,7 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install Tfsec
-        uses: liamg/tfsec-action@v0.3.0
+        uses: aquasecurity/tfsec-action@v1.0.0
       - name: Tfsec Scan
         id: tfsec
         run: |
