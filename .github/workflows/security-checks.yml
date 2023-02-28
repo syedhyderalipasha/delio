@@ -1,4 +1,4 @@
-name: checkov
+name: security-checks
 on: pull_request
 jobs:
   checkov:
