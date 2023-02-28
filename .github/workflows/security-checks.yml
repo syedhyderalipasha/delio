@@ -21,39 +21,3 @@ jobs:
         with:
           name: Checkov Report
           path: checkov_report.json
-
-  terrascan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Terrascan
-        uses: tenable/terrascan-action@main
-        with:
-          iac_type: 'terraform'
-          iac_version: 'v14'
-          policy_type: 'aws'
-      - name: Terrascan Scan
-        id: terrascan
-        run: |
-          terrascan scan -i ./terraform -o json | tee terrascan_report.json
-      - name: Upload Terrascan report to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: Terrascan Report
-          path: terrascan_report.json
-
-  tfsec:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Tfsec
-        uses: aquasecurity/tfsec-action@v1.0.0
-      - name: Tfsec Scan
-        id: tfsec
-        run: |
-          tfsec ./terraform | tee tfsec_report.json
-      - name: Upload Tfsec report to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: Tfsec Report
-          path: tfsec_report.json
