@@ -1,5 +1,6 @@
 name: security-checks
 on: pull_request
+
 jobs:
   checkov:
     runs-on: ubuntu-latest
@@ -16,24 +17,27 @@ jobs:
         id: checkov
         run: |
           checkov -d ./terraform | tee checkov_report.json
-
-      - name: Upload report to artifacts
+      - name: Upload Checkov report to artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Checkov Report
           path: checkov_report.json
+
   terrascan:
     runs-on: ubuntu-latest
-    name: terrascan-action
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Run Terrascan
-      id: terrascan
-      uses: tenable/terrascan-action@main
-      with:
-        iac_type: 'terraform'
-        iac_version: 'v14'
-        policy_type: 'aws'
-        only_warn: true
-        iac_dir: terraform
+      - uses: actions/checkout@v2
+      - name: Install Terrascan
+        run: |
+          curl -L "$(curl -s https://api.github.com/repos/accurics/terrascan/releases/latest | grep -o -E "https://.+?_Linux_x86_64.tar.gz")" > terrascan.tar.gz
+          tar zxvf terrascan.tar.gz && rm terrascan.tar.gz
+          mv terrascan /usr/local/bin
+      - name: Terrascan Scan
+        id: terrascan
+        run: |
+          terrascan scan -f terraform -d ./terraform | tee terrascan_report.json
+      - name: Upload Terrascan report to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Terrascan Report
+          path: terrascan_report.json
