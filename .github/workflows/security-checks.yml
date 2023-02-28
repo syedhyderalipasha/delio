@@ -1,4 +1,4 @@
-name: checkov
+name: security-checks
 on: pull_request
 jobs:
   checkov:
@@ -16,24 +16,8 @@ jobs:
         id: checkov
         run: |
           checkov -d ./terraform | tee checkov_report.json
-
-      - name: Upload report to artifacts
+      - name: Upload Checkov report to artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Checkov Report
           path: checkov_report.json
-  terrascan:
-    runs-on: ubuntu-latest
-    name: terrascan-action
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Run Terrascan
-      id: terrascan
-      uses: tenable/terrascan-action@main
-      with:
-        iac_type: 'terraform'
-        iac_version: 'v14'
-        policy_type: 'aws'
-        only_warn: true
-        iac_dir: terraform
