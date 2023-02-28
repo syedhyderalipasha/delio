@@ -1,6 +1,5 @@
 name: security-checks
 on: pull_request
-
 jobs:
   checkov:
     runs-on: ubuntu-latest
@@ -22,20 +21,19 @@ jobs:
         with:
           name: Checkov Report
           path: checkov_report.json
-
+          
   terrascan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Install Terrascan
+      - name: Download Terrascan
         run: |
           curl -L "$(curl -s https://api.github.com/repos/accurics/terrascan/releases/latest | grep -o -E "https://.+?_Linux_x86_64.tar.gz")" > terrascan.tar.gz
-          tar zxvf terrascan.tar.gz && rm terrascan.tar.gz
-          mv terrascan /usr/local/bin
+          tar xvzf terrascan.tar.gz
+          sudo mv ./terrascan /usr/local/bin/
       - name: Terrascan Scan
         id: terrascan
         run: |
-          terrascan scan -f terraform -d ./terraform | tee terrascan_report.json
+          terrascan scan -i terraform ./terraform | tee terrascan_report.json
       - name: Upload Terrascan report to artifacts
         uses: actions/upload-artifact@v2
         with:
