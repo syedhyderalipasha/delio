@@ -16,8 +16,3 @@ jobs:
         policy_type: 'aws'
         only_warn: true
         iac_dir: terraform
-    - name: Upload terrascan results
-      uses: actions/upload-artifact@v2
-      with:
-        name: terrascan-results
-        path: results.txt
