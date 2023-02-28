@@ -15,13 +15,13 @@ jobs:
       - name: Checkov Scan
         id: checkov
         run: |
-          checkov -d ./terraform --output-file checkov_report.md
+          checkov -d ./terraform | tee checkov_report.json
 
       - name: Upload report to artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Checkov Report
-          path: checkov_report.md
+          path: checkov_report.json
   terrascan:
     runs-on: ubuntu-latest
     name: terrascan-action
