@@ -1,7 +1,7 @@
-name: security-checks
+name: checkov
 on: pull_request
 jobs:
-  security-checks:
+  checkov:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -9,9 +9,31 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-      - name: Test with Checkov
+      - name: Install Checkov
+        run: |
+          pip install checkov
+      - name: Checkov Scan
         id: checkov
-        uses: bridgecrewio/checkov-action@master
+        run: |
+          checkov -d ./terraform | tee checkov_report.json
+
+      - name: Upload report to artifacts
+        uses: actions/upload-artifact@v2
         with:
-          directory: terraform
-          framework: terraform
+          name: Checkov Report
+          path: checkov_report.json
+  terrascan:
+    runs-on: ubuntu-latest
+    name: terrascan-action
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Run Terrascan
+      id: terrascan
+      uses: tenable/terrascan-action@main
+      with:
+        iac_type: 'terraform'
+        iac_version: 'v14'
+        policy_type: 'aws'
+        only_warn: true
+        iac_dir: terraform
