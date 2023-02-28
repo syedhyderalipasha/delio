@@ -26,8 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run Terrascan
-        id: terrascan
+      - name: Install Terrascan
         uses: tenable/terrascan-action@main
         with:
           iac_type: 'terraform'
@@ -37,7 +36,7 @@ jobs:
         id: terrascan
         run: |
           terrascan scan -i ./terraform -o json | tee terrascan_report.json
-     - name: Upload Terrascan report to artifacts
+      - name: Upload Terrascan report to artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Terrascan Report
